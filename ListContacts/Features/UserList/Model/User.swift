@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct User: Identifiable, Codable {
+public struct User: Identifiable, Codable, Equatable {
     public let login: String
     public let id: Int
     public let avatarUrl: String
@@ -30,3 +30,5 @@ public struct User: Identifiable, Codable {
         case siteAdmin = "site_admin"
     }
 }
+
+

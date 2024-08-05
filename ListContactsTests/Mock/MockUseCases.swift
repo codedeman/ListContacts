@@ -9,6 +9,23 @@ import Foundation
 import Combine
 
 final class MockUseCases: UseCases {
+    func fetchInforUser2(userName: String) -> AnyPublisher<Test, any Error> {
+        let test = Test(login: "", id: 123, avatar_url: "Dan choi tui my")
+        return Just(test)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchInforUser(userName: String) -> AnyPublisher<UserInformation, any Error> {
+        let userInformation = UserInformationBuilder()
+            .setLogin("johndoe")
+            .setId(123)
+            .setNodeId("node123")
+            .build()
+        return Just(userInformation)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
 
     func fetchUsers(pageNum: Int, limit: Int) -> AnyPublisher<[User], any Error> {
         let users = (0..<limit).map { index in

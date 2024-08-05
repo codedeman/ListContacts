@@ -9,12 +9,12 @@ import Foundation
 import SwiftUI
 
 struct UserDetailsView: View {
-    let user: User
+    let user: UserInformation?
 
     var body: some View {
         VStack {
             HStack {
-                AsyncImage(url: URL(string: user.avatarUrl)) { image in
+                AsyncImage(url: URL(string: user?.avatarUrl ?? "")) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -26,7 +26,7 @@ struct UserDetailsView: View {
                 .padding()
 
                 VStack(alignment: .leading) {
-                    Text(user.login)
+                    Text(user?.login ?? "")
                         .font(.title)
 
                     Text("Country information not available")
@@ -44,14 +44,14 @@ struct UserDetailsView: View {
             HStack {
                 VStack {
                     Image(systemName: "person.2.fill")
-                    Text("Followers")
+                    Text("\(user?.followers ?? 0)Followers")
                         .multilineTextAlignment(.center)
                 }
                 .padding()
 
                 VStack {
                     Image(systemName: "person.3.fill")
-                    Text("Following")
+                    Text("\(user?.following ?? 0)Following")
                         .multilineTextAlignment(.center)
                 }
                 .padding()

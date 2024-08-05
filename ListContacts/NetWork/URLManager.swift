@@ -25,6 +25,12 @@ class URLManager {
 
     }
 
+    func userInformationURL(userName: String) throws -> URLRequest? {
+        let urlString = "\(baseURL)/users/\(userName)"
+        guard let url = URL(string: urlString) else { return nil }
+        return URLRequest(url: url)
+    }
+
     func urlRequest(for url: URL) -> URLRequest {
         return URLRequest(url: url)
     }

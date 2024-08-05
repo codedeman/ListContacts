@@ -1,16 +1,10 @@
-//
-//  UserListView.swift
-//  UserProfile
-//
-//  Created by Kevin on 8/2/24.
-//
-
 
 import SwiftUI
 
 struct UserListView: View {
     @StateObject private var viewModel: UserViewModel
     @State private var selectedUser: User?
+    @State private var isNavigating: Bool = false
 
     init(
         viewModel: UserViewModel = UserViewModel(
@@ -23,19 +17,38 @@ struct UserListView: View {
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
-                List(viewModel.users) { user in
-                    VStack(spacing: 0) {
-                        UserRowView(
-                            user: user,
-                            width: geometry.size.width - 32
-                        )
-                        .contentShape(Rectangle()) // Makes the whole row tappable
-                        .onTapGesture {
-                            selectedUser = user
+                List {
+                    ForEach(viewModel.users) { user in
+                        VStack(spacing: 0) {
+                            UserRowView(
+                                user: user,
+                                width: geometry.size.width - 32
+                            )
+                            .contentShape(Rectangle()) // Makes the whole row tappable
+                            .onTapGesture {
+                                viewModel.fetchUserInformation(userName: user.login)
+                            }
+                            .padding(.vertical, 8) // Add vertical padding for spacing between items
+                            .listRowInsets(EdgeInsets())
+                            .onAppear {
+                                if user == viewModel.users.last {
+                                    viewModel.loadMoreUsersIfNeeded(
+                                        currentUser: user
+                                    )
+                                }
+                            }
                         }
-                        .padding(.vertical, 8) // Add vertical padding for spacing between items
-                        .listRowInsets(EdgeInsets())
-                    }.listRowInsets(EdgeInsets())
+                        .listRowInsets(EdgeInsets()) // Remove default list row insets
+                    }
+
+                    if viewModel.isFetching {
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+                        .padding(.vertical, 16) // Optional: add some vertical padding
+                    }
                 }
                 .listStyle(PlainListStyle()) // Optional: to remove default list styling
                 .navigationTitle("Github Users")
@@ -48,24 +61,19 @@ struct UserListView: View {
                 }
                 .background(
                     NavigationLink(
-                        destination: selectedUser.map { UserDetailsView(user: $0) },
-                        isActive: Binding(
-                            get: { selectedUser != nil },
-                            set: { isActive in
-                                if !isActive { selectedUser = nil }
-                            }
-                        )
+                        destination: UserDetailsView(user: viewModel.userInfor),
+                        isActive: $isNavigating // Use state to trigger navigation
                     ) {
                         EmptyView()
                     }
                 )
+                .onChange(of: viewModel.userInfor) { _ in
+                    isNavigating = viewModel.userInfor != nil
+                }
             }
         }
     }
 }
-
-
-
 
 #Preview {
     UserListView()

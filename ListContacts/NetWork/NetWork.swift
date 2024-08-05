@@ -8,8 +8,7 @@
 import Foundation
 import Combine
 
- protocol NetWorkLayer: AnyObject {
-
+protocol NetWorkLayer: AnyObject {
     func request<T: Decodable>(_ urlRequest: URLRequest, for type: T.Type, decoder: JSONDecoder) -> AnyPublisher<T, Error>
 
 }
@@ -40,12 +39,17 @@ final class DBNetWorkLayer: NetWorkLayer {
         decoder: JSONDecoder
     ) -> AnyPublisher<T, any Error> where T : Decodable {
 
-        return URLSession
-            .shared
-            .dataTaskPublisher(for: urlRequest)
+        return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .map { $0.data }
-            .decode(type: T.self, decoder: decoder)
+            .tryMap { data in
+                do {
+                    return try decoder.decode(T.self, from: data)
+                } catch {
+                    throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Failed to decode data"))
+                }
+            }
             .eraseToAnyPublisher()
+
     }
 
 }
