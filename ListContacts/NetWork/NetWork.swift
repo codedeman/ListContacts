@@ -8,13 +8,12 @@
 import Foundation
 import Combine
 
-public protocol NetWorkLayer: AnyObject {
+ protocol NetWorkLayer: AnyObject {
 
     func request<T: Decodable>(_ urlRequest: URLRequest, for type: T.Type, decoder: JSONDecoder) -> AnyPublisher<T, Error>
 
 }
-
-public extension NetWorkLayer {
+ extension NetWorkLayer {
 
     func request<T: Decodable>(
         _ urlRequest: URLRequest,

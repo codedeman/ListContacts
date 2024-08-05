@@ -12,7 +12,11 @@ struct UserListView: View {
     @StateObject private var viewModel: UserViewModel
     @State private var selectedUser: User?
 
-    init(viewModel: UserViewModel = UserViewModel(useCases: DBUseCases())) {
+    init(
+        viewModel: UserViewModel = UserViewModel(
+            useCases: DBUseCases()
+        )
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 

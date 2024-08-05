@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-public protocol UseCases {
+protocol UseCases {
     func fetchUsers(pageNum: Int, limit: Int) -> AnyPublisher<[User], Error>
 }
 

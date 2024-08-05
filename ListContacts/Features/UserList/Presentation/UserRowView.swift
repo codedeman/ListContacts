@@ -8,15 +8,6 @@
 import Foundation
 import SwiftUI
 
-//let user = UserBuilder()
-//        .setLogin("defunkt")
-//        .setId(2)
-//        .setAvatarUrl("https://avatars.githubusercontent.com/u/2?v=4")
-//        .setHtmlUrl("https://github.com/defunkt")
-//        .setFollowersUrl("https://api.github.com/users/defunkt/followers")
-//        .setFollowingUrl("https://api.github.com/users/defunkt/following{/other_user}")
-//        .setReposUrl("https://api.github.com/users/defunkt/repos")
-//        .build()
 
 struct UserRowView: View {
 

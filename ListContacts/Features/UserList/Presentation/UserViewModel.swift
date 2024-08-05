@@ -57,7 +57,9 @@ final class UserViewModel: ObservableObject {
                     self.error = IdentifiableError(message: error.localizedDescription)
                 }
             }, receiveValue: { [weak self] newUsers in
-                self?.users.append(contentsOf: newUsers)
+                let currentUserIds = Set(self?.users.map { $0.id } ?? [])
+                let filteredNewUsers = newUsers.filter { !currentUserIds.contains($0.id) }
+                self?.users.append(contentsOf: filteredNewUsers)
                 self?.cacheUsers()
 
             })
