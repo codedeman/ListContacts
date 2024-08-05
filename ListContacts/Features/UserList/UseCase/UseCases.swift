@@ -11,8 +11,6 @@ import Combine
 protocol UseCases {
     func fetchUsers(pageNum: Int, limit: Int) -> AnyPublisher<[User], Error>
     func fetchInforUser(userName: String) -> AnyPublisher<UserInformation, Error>
-    func fetchInforUser2(userName: String) -> AnyPublisher<Test, Error>
-
 }
 
 final class DBUseCases: UseCases {
@@ -33,7 +31,7 @@ final class DBUseCases: UseCases {
         limit: Int
     ) -> AnyPublisher<[User], any Error> {
 
-        guard let url = urlManager.usersURL(
+        guard let url = try? urlManager.usersURL(
             pageNum: pageNum,
             perPage: limit
         ) else {
@@ -59,17 +57,6 @@ final class DBUseCases: UseCases {
         )
     }
 
-    func fetchInforUser2(userName: String) -> AnyPublisher<Test, any Error> {
 
-        guard let url = try? urlManager.userInformationURL(userName: userName) else {
-            return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
-        }
-        return netWork.request(
-            url,
-            for: Test.self,
-            decoder: JSONDecoder()
-        )
-
-    }
 
 }

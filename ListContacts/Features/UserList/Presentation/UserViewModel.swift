@@ -23,23 +23,6 @@ final class UserViewModel: ObservableObject {
         fetchUsers(pageNum: pageNum)
     }
 
-    func fetchUserInformation(userName: String) {
-        print("user name \(userName)")
-
-        useCases.fetchInforUser(userName: userName)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    self.error = IdentifiableError(message: error.localizedDescription)
-                }
-            } receiveValue: { [weak self] userInfor in
-                self?.userInfor = userInfor
-            }.store(in: &cancellables)
-    }
-
     private func loadCachedUsers() {
         if let data = UserDefaults.standard.data(forKey: "cachedUsers") {
             if let cachedUsers = try? JSONDecoder().decode([User].self, from: data) {
@@ -92,6 +75,22 @@ final class UserViewModel: ObservableObject {
         }
     }
 
+    func fetchUserInformation(userName: String) {
+        print("user name \(userName)")
+
+        useCases.fetchInforUser(userName: userName)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self.error = IdentifiableError(message: error.localizedDescription)
+                }
+            } receiveValue: { [weak self] userInfor in
+                self?.userInfor = userInfor
+            }.store(in: &cancellables)
+    }
 
 
     private func setupBindings() {

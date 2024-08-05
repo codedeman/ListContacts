@@ -17,7 +17,7 @@ class URLManager {
     func usersURL(
         pageNum: Int,
         perPage: Int = 20
-    ) -> URLRequest? {
+    ) throws -> URLRequest? {
 
         let urlString = "\(baseURL)/users?per_page=\(perPage)&since=\(pageNum)"
         guard let url = URL(string: urlString) else { return nil }
