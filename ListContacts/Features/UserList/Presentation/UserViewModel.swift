@@ -19,7 +19,6 @@ final class UserViewModel: ObservableObject {
     init(useCases: UseCases) {
         self.useCases = useCases
         loadCachedUsers()
-        setupBindings()
         fetchUsers(pageNum: pageNum)
     }
 
@@ -93,12 +92,5 @@ final class UserViewModel: ObservableObject {
     }
 
 
-    private func setupBindings() {
-        $pageNum
-            .dropFirst()
-            .sink { [weak self] newPageNum in
-                self?.fetchUsers(pageNum: newPageNum)
-            }
-            .store(in: &cancellables)
-    }
+
 }
