@@ -1,16 +1,11 @@
 
 import SwiftUI
-
 struct UserListView: View {
     @StateObject private var viewModel: UserViewModel
     @State private var selectedUser: User?
     @State private var isNavigating: Bool = false
 
-    init(
-        viewModel: UserViewModel = UserViewModel(
-            useCases: DBUseCases()
-        )
-    ) {
+    init(viewModel: UserViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
@@ -31,10 +26,10 @@ struct UserListView: View {
                             .padding(.vertical, 8) // Add vertical padding for spacing between items
                             .listRowInsets(EdgeInsets())
                             .onAppear {
-                                if user == viewModel.users.last {
-                                    viewModel.loadMoreUsersIfNeeded(
-                                        currentUser: user
-                                    )
+                                if user == viewModel.users.last && !viewModel.isFetching {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        viewModel.loadMoreUsersIfNeeded(currentUser: user)
+                                    }
                                 }
                             }
                         }
@@ -47,10 +42,10 @@ struct UserListView: View {
                             ProgressView()
                             Spacer()
                         }
-                        .padding(.vertical, 16) // Optional: add some vertical padding
+                        .padding(.vertical, 16) // add some vertical padding
                     }
                 }
-                .listStyle(PlainListStyle()) // Optional: to remove default list styling
+                .listStyle(PlainListStyle()) // to remove default list styling
                 .navigationTitle("Github Users")
                 .alert(item: $viewModel.error) { error in
                     Alert(
@@ -67,14 +62,10 @@ struct UserListView: View {
                         EmptyView()
                     }
                 )
-                .onChange(of: viewModel.userInfor) { _ in
-                    isNavigating = viewModel.userInfor != nil
+                .onChange(of: viewModel.userInfor) { newValue in
+                    isNavigating = newValue != nil
                 }
             }
         }
     }
-}
-
-#Preview {
-    UserListView()
 }

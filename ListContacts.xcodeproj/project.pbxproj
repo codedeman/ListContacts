@@ -12,6 +12,8 @@
 		0A05E2232C5F6931003338FA /* MockUseCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A05E21E2C5F66D5003338FA /* MockUseCases.swift */; };
 		0A05E2262C5F697B003338FA /* UserViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A05E2252C5F697B003338FA /* UserViewModelTest.swift */; };
 		0AB71B2B2C610AB6008ED45D /* UserInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB71B2A2C610AB6008ED45D /* UserInformation.swift */; };
+		0AB71B2D2C61C857008ED45D /* MockNetWork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB71B2C2C61C857008ED45D /* MockNetWork.swift */; };
+		0AB71B302C61CB4A008ED45D /* userresponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 0AB71B2F2C61CB4A008ED45D /* userresponse.json */; };
 		0AC64B282C5D19400034BE91 /* ListContactsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC64B272C5D19400034BE91 /* ListContactsApp.swift */; };
 		0AC64B2A2C5D19400034BE91 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC64B292C5D19400034BE91 /* ContentView.swift */; };
 		0AC64B2C2C5D19410034BE91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AC64B2B2C5D19410034BE91 /* Assets.xcassets */; };
@@ -27,6 +29,8 @@
 		0AC64B662C5D1F2B0034BE91 /* UserDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC64B622C5D1F2B0034BE91 /* UserDetailsView.swift */; };
 		0AC64B672C5D1F2B0034BE91 /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC64B632C5D1F2B0034BE91 /* UserListView.swift */; };
 		0AC64B682C5D1F2B0034BE91 /* UserRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC64B642C5D1F2B0034BE91 /* UserRowView.swift */; };
+		0AF0E06E2C63064100A38709 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF0E06D2C63064100A38709 /* Storage.swift */; };
+		0AF0E0712C630A0600A38709 /* MockUserPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF0E06F2C6309FB00A38709 /* MockUserPersistence.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +56,8 @@
 		0A05E21E2C5F66D5003338FA /* MockUseCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUseCases.swift; sourceTree = "<group>"; };
 		0A05E2252C5F697B003338FA /* UserViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModelTest.swift; sourceTree = "<group>"; };
 		0AB71B2A2C610AB6008ED45D /* UserInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInformation.swift; sourceTree = "<group>"; };
+		0AB71B2C2C61C857008ED45D /* MockNetWork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetWork.swift; sourceTree = "<group>"; };
+		0AB71B2F2C61CB4A008ED45D /* userresponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = userresponse.json; sourceTree = "<group>"; };
 		0AC64B242C5D19400034BE91 /* ListContacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ListContacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AC64B272C5D19400034BE91 /* ListContactsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListContactsApp.swift; sourceTree = "<group>"; };
 		0AC64B292C5D19400034BE91 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -70,6 +76,8 @@
 		0AC64B622C5D1F2B0034BE91 /* UserDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailsView.swift; sourceTree = "<group>"; };
 		0AC64B632C5D1F2B0034BE91 /* UserListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
 		0AC64B642C5D1F2B0034BE91 /* UserRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRowView.swift; sourceTree = "<group>"; };
+		0AF0E06D2C63064100A38709 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		0AF0E06F2C6309FB00A38709 /* MockUserPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserPersistence.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +110,7 @@
 			children = (
 				0A05E21E2C5F66D5003338FA /* MockUseCases.swift */,
 				0A05E2192C5F64EA003338FA /* MockURLProtocol.swift */,
+				0AF0E06F2C6309FB00A38709 /* MockUserPersistence.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -120,6 +129,14 @@
 				0A05E2252C5F697B003338FA /* UserViewModelTest.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		0AB71B2E2C61CAEB008ED45D /* Resouces */ = {
+			isa = PBXGroup;
+			children = (
+				0AB71B2F2C61CB4A008ED45D /* userresponse.json */,
+			);
+			path = Resouces;
 			sourceTree = "<group>";
 		};
 		0AC64B1B2C5D193F0034BE91 = {
@@ -145,9 +162,9 @@
 		0AC64B262C5D19400034BE91 /* ListContacts */ = {
 			isa = PBXGroup;
 			children = (
+				0AF0E06C2C63061000A38709 /* Caching */,
 				0AC64B562C5D1D2F0034BE91 /* Features */,
 				0AC64B532C5D1BCA0034BE91 /* NetWork */,
-				0AC64B512C5D1B600034BE91 /* Foundation */,
 				0AC64B272C5D19400034BE91 /* ListContactsApp.swift */,
 				0AC64B292C5D19400034BE91 /* ContentView.swift */,
 				0AC64B2B2C5D19410034BE91 /* Assets.xcassets */,
@@ -184,18 +201,13 @@
 			path = ListContactsUITests;
 			sourceTree = "<group>";
 		};
-		0AC64B512C5D1B600034BE91 /* Foundation */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Foundation;
-			sourceTree = "<group>";
-		};
 		0AC64B532C5D1BCA0034BE91 /* NetWork */ = {
 			isa = PBXGroup;
 			children = (
+				0AB71B2E2C61CAEB008ED45D /* Resouces */,
 				0AC64B5B2C5D1EA90034BE91 /* URLManager.swift */,
 				0AC64B542C5D1BE20034BE91 /* NetWork.swift */,
+				0AB71B2C2C61C857008ED45D /* MockNetWork.swift */,
 			);
 			path = NetWork;
 			sourceTree = "<group>";
@@ -244,6 +256,14 @@
 				0AC64B612C5D1F2B0034BE91 /* UserViewModel.swift */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		0AF0E06C2C63061000A38709 /* Caching */ = {
+			isa = PBXGroup;
+			children = (
+				0AF0E06D2C63064100A38709 /* Storage.swift */,
+			);
+			path = Caching;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -352,6 +372,7 @@
 			files = (
 				0AC64B2F2C5D19410034BE91 /* Preview Assets.xcassets in Resources */,
 				0AC64B2C2C5D19410034BE91 /* Assets.xcassets in Resources */,
+				0AB71B302C61CB4A008ED45D /* userresponse.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,13 +398,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AC64B662C5D1F2B0034BE91 /* UserDetailsView.swift in Sources */,
+				0AF0E06E2C63064100A38709 /* Storage.swift in Sources */,
 				0AB71B2B2C610AB6008ED45D /* UserInformation.swift in Sources */,
 				0AC64B672C5D1F2B0034BE91 /* UserListView.swift in Sources */,
 				0AC64B2A2C5D19400034BE91 /* ContentView.swift in Sources */,
+				0AB71B2D2C61C857008ED45D /* MockNetWork.swift in Sources */,
 				0AC64B5A2C5D1D7F0034BE91 /* UseCases.swift in Sources */,
 				0AC64B5F2C5D1EDF0034BE91 /* User.swift in Sources */,
 				0AC64B282C5D19400034BE91 /* ListContactsApp.swift in Sources */,
 				0AC64B682C5D1F2B0034BE91 /* UserRowView.swift in Sources */,
+				0AF0E0712C630A0600A38709 /* MockUserPersistence.swift in Sources */,
 				0AC64B5C2C5D1EA90034BE91 /* URLManager.swift in Sources */,
 				0AC64B652C5D1F2B0034BE91 /* UserViewModel.swift in Sources */,
 				0AC64B552C5D1BE20034BE91 /* NetWork.swift in Sources */,

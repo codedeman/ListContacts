@@ -18,27 +18,17 @@ final class UserViewModel: ObservableObject {
 
     init(useCases: UseCases) {
         self.useCases = useCases
-        loadCachedUsers()
+        self.users = useCases.loadCachedUsers()
         fetchUsers(pageNum: pageNum)
     }
 
-    private func loadCachedUsers() {
-        if let data = UserDefaults.standard.data(forKey: "cachedUsers") {
-            if let cachedUsers = try? JSONDecoder().decode([User].self, from: data) {
-                self.users = cachedUsers
-            }
-        }
-    }
-
-    private func cacheUsers() {
-        if let data = try? JSONEncoder().encode(users) {
-            UserDefaults.standard.set(data, forKey: "cachedUsers")
-        }
-    }
-
     func fetchUsers(pageNum: Int) {
-        guard !isFetching else { return } // Avoid making multiple requests at the same time
+        guard !isFetching else {
+            print("Fetch already in progress")
+            return
+        } // Avoid making multiple requests at the same time
         isFetching = true
+        print("Fetching users for page: \(pageNum)")
 
         useCases.fetchUsers(pageNum: pageNum, limit: 20)
             .receive(on: DispatchQueue.main)
@@ -49,34 +39,38 @@ final class UserViewModel: ObservableObject {
                     break
                 case .failure(let error):
                     self?.error = IdentifiableError(message: error.localizedDescription)
+                    print("Error fetching users: \(error.localizedDescription)")
                 }
             }, receiveValue: { [weak self] newUsers in
                 guard let self = self else { return }
-                let currentUserIds = Set(self.users.map { $0.id })
-                let filteredNewUsers = newUsers.filter { !currentUserIds.contains($0.id) }
+                let currentUserIds = Set(self.users.map { $0.id }) // / Getting the IDs of current users
+                let filteredNewUsers = newUsers.filter { !currentUserIds.contains($0.id) } // Filtering new users
                 self.users.append(contentsOf: filteredNewUsers)
-                self.cacheUsers()
+                print("Fetched \(filteredNewUsers.count) new users") // Appending new users to the users array
+                self.useCases.cacheUsers(users) // Caching the updated users array
             })
             .store(in: &cancellables)
     }
 
+    // Function to load more users if needed based on the current user's position
     func loadMoreUsersIfNeeded(currentUser user: User?) {
         guard let user = user else {
-            fetchUsers(pageNum: pageNum)
+            fetchUsers(pageNum: pageNum) // Fetching users if currentUser is nil
             return
         }
 
-        let thresholdIndex = users.index(users.endIndex, offsetBy: -5)
+        let thresholdIndex = users.index(users.endIndex, offsetBy: -5) // Setting the threshold index
         if let userIndex = users.firstIndex(where: { $0.id == user.id }), userIndex >= thresholdIndex {
-            print("Loading more users. Page number:", pageNum)
-            pageNum += 1
+            print("Current user index \(userIndex), threshold index \(thresholdIndex). Loading more users.")
+            pageNum += 1 // Incrementing the page number
             fetchUsers(pageNum: pageNum)
+        } else {
+            print("Current user index \(users.firstIndex(where: { $0.id == user.id }) ?? -1), threshold index \(thresholdIndex). No need to load more users.", pageNum)
         }
     }
 
+    // Function to fetch information for a specific user by username
     func fetchUserInformation(userName: String) {
-        print("user name \(userName)")
-
         useCases.fetchInforUser(userName: userName)
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -85,12 +79,10 @@ final class UserViewModel: ObservableObject {
                     break
                 case .failure(let error):
                     self.error = IdentifiableError(message: error.localizedDescription)
+                    print("Error fetching user info: \(error.localizedDescription)")
                 }
             } receiveValue: { [weak self] userInfor in
                 self?.userInfor = userInfor
             }.store(in: &cancellables)
     }
-
-
-
 }

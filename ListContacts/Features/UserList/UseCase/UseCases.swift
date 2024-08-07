@@ -11,17 +11,24 @@ import Combine
 protocol UseCases {
     func fetchUsers(pageNum: Int, limit: Int) -> AnyPublisher<[User], Error>
     func fetchInforUser(userName: String) -> AnyPublisher<UserInformation, Error>
+    func cacheUsers(_ users: [User])
+    func loadCachedUsers() -> [User]
+
 }
 
 final class DBUseCases: UseCases {
-    
-    let netWork: NetWorkLayer
-    let urlManager: URLManager
 
+    
+    
+    private let netWork: NetWorkLayer
+    private let urlManager: URLManager
+    private let storages: UserPersistence
     init(
         netWork: NetWorkLayer = DBNetWorkLayer(),
-        urlManager: URLManager = URLManager()
+        urlManager: URLManager = URLManager(),
+        storages: DBUserPersistence = DBUserPersistence()
     ) {
+        self.storages = storages
         self.netWork = netWork
         self.urlManager = urlManager
     }
@@ -56,5 +63,14 @@ final class DBUseCases: UseCases {
             decoder: JSONDecoder()
         )
     }
+
+    func cacheUsers(_ users: [User]) {
+        storages.cacheItems(users, forKey: "cachedUsers")
+    }
+
+    func loadCachedUsers() -> [User] {
+        return storages.loadCachedItems(forKey: "cachedUsers")
+    }
+
 
 }

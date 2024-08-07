@@ -9,6 +9,19 @@ import Foundation
 import Combine
 
 final class MockUseCases: UseCases {
+    private let storage: UserPersistence
+    init(storage: UserPersistence) {
+        self.storage = storage
+    }
+
+    func cacheUsers(_ users: [User]) {
+        storage.cacheItems(users, forKey: "mockCache")
+    }
+    
+    func loadCachedUsers() -> [User] {
+        return storage.loadCachedItems(forKey: "mockCache")
+    }
+    
     func fetchInforUser2(userName: String) -> AnyPublisher<Test, any Error> {
         let test = Test(login: "", id: 123, avatar_url: "Dan choi tui my")
         return Just(test)

@@ -15,11 +15,12 @@ final class UserViewModelTest: XCTestCase {
     private var cancellables: Set<AnyCancellable> = []
     private var sut: UserViewModel!
     private var useCases: MockUseCases!
+    private var mockPersistence: MockUserPersistence!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        UserDefaults.standard.removeObject(forKey: "cachedUsers")
-        useCases = MockUseCases()
+        mockPersistence = MockUserPersistence()
+        useCases = MockUseCases(storage: mockPersistence)
         sut = UserViewModel(useCases: useCases)
         cancellables = []
     }
@@ -31,13 +32,13 @@ final class UserViewModelTest: XCTestCase {
     }
 
     func testFetchUsers() {
-            // Given
-            let expectation = self.expectation(description: "Fetch users")
+        // Given
+        let expectation = self.expectation(description: "Fetch users")
 
-            // When
-            sut.fetchUsers(pageNum: 0)
+        // When
+        sut.fetchUsers(pageNum: 0)
 
-            // Then
+        // Then
         var subscription: AnyCancellable? = nil
 
         subscription =  sut.$users
@@ -50,8 +51,8 @@ final class UserViewModelTest: XCTestCase {
                 subscription?.cancel()
             }
 
-            waitForExpectations(timeout: 5, handler: nil)
-        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
 
     func testLoadMoreUsersIfNeeded() {
            // Create an expectation

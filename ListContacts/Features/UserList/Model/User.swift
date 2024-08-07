@@ -31,4 +31,77 @@ public struct User: Identifiable, Codable, Equatable {
     }
 }
 
+public class UserBuilder {
+    private var login: String = ""
+    private var id: Int = 0
+    private var avatarUrl: String = ""
+    private var htmlUrl: String = ""
+    private var followersUrl: String = ""
+    private var followingUrl: String = ""
+    private var reposUrl: String = ""
+    private var type: String = ""
+    private var siteAdmin: Bool = false
+
+    public init() {}
+
+    public func setLogin(_ login: String) -> UserBuilder {
+        self.login = login
+        return self
+    }
+
+    public func setId(_ id: Int) -> UserBuilder {
+        self.id = id
+        return self
+    }
+
+    public func setAvatarUrl(_ avatarUrl: String) -> UserBuilder {
+        self.avatarUrl = avatarUrl
+        return self
+    }
+
+    public func setHtmlUrl(_ htmlUrl: String) -> UserBuilder {
+        self.htmlUrl = htmlUrl
+        return self
+    }
+
+    public func setFollowersUrl(_ followersUrl: String) -> UserBuilder {
+        self.followersUrl = followersUrl
+        return self
+    }
+
+    public func setFollowingUrl(_ followingUrl: String) -> UserBuilder {
+        self.followingUrl = followingUrl
+        return self
+    }
+
+    public func setReposUrl(_ reposUrl: String) -> UserBuilder {
+        self.reposUrl = reposUrl
+        return self
+    }
+
+    public func setType(_ type: String) -> UserBuilder {
+        self.type = type
+        return self
+    }
+
+    public func setSiteAdmin(_ siteAdmin: Bool) -> UserBuilder {
+        self.siteAdmin = siteAdmin
+        return self
+    }
+
+    public func build() -> User {
+        return User(
+            login: login,
+            id: id,
+            avatarUrl: avatarUrl,
+            htmlUrl: htmlUrl,
+            followersUrl: followersUrl,
+            followingUrl: followingUrl,
+            reposUrl: reposUrl,
+            type: type,
+            siteAdmin: siteAdmin
+        )
+    }
+}
+
 

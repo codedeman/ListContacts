@@ -42,7 +42,11 @@ final class DBNetWorkLayer: NetWorkLayer {
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
             .map { $0.data }
             .tryMap { data in
+
+                self.logPrettyPrintedJSON(data: data)
+
                 do {
+
                     return try decoder.decode(T.self, from: data)
                 } catch {
                     throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Failed to decode data"))
@@ -51,5 +55,15 @@ final class DBNetWorkLayer: NetWorkLayer {
             .eraseToAnyPublisher()
 
     }
+
+    private func logPrettyPrintedJSON(data: Data) {
+         if let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
+            let jsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted]),
+            let jsonString = String(data: jsonData, encoding: .utf8) {
+             print("Response Data (Pretty-Printed JSON):\n\(jsonString)")
+         } else {
+             print("Response Data: \(data.count) bytes")
+         }
+     }
 
 }

@@ -11,7 +11,11 @@ import SwiftUI
 struct ListContactsApp: App {
     var body: some Scene {
         WindowGroup {
-            UserListView()
+            UserListView(
+                viewModel: .init(
+                    useCases: DBUseCases(netWork: DBNetWorkLayer())
+                )
+            )
         }
     }
 }
