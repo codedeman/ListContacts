@@ -1,20 +1,13 @@
 
-import Foundation
 import Combine
+import Foundation
 
 struct IdentifiableError: Identifiable {
     var id = UUID()
     var message: String
 }
 
-protocol ViewModelType {
-    associatedtype Input
-    associatedtype Output
-    func transform(input: Input, cancelBag: CancelBag) -> Output
-}
-
 final class UserViewModel: ObservableObject, ViewModelType {
-   
     @Published var users: [User] = []
     @Published var pageNum: Int = 1
     private var useCases: UseCases
@@ -30,30 +23,46 @@ final class UserViewModel: ObservableObject, ViewModelType {
         let loadTrigger: AnyPublisher<Void, Never>
         let selectedTrigger: AnyPublisher<String, Never>
         let loadMoreTrigger: AnyPublisher<Void, Never> // Add load more trigger
-
     }
-    
+
     final class Output: ObservableObject {
         @Published var users: [User] = []
         @Published var userInfor: UserInformation?
     }
+
     func transform(input: Input, cancelBag: CancelBag) -> Output {
         let output = Output()
         let usersPublisher = input.loadTrigger
-            .flatMap {  _ in
-                self.useCases.fetchUsers(pageNum: self.pageNum, limit: 20)
-                    .map { users in
-                        return users
+            .flatMap { [weak self] _ -> AnyPublisher<[User], Never> in
+                guard let self = self else {
+                    return Just([]).eraseToAnyPublisher() // Return an empty array if self is nil
+                }
+
+                return self.useCases.fetchUsers(pageNum: self.pageNum, limit: 20)
+                    .map { users -> [User] in // Ensure it maps to [User]
+                        users
                     }
-                    .replaceError(with: []) // Handle error by returning an empty array
-            }.eraseToAnyPublisher()
+                    .replaceError(with: [])
+                    .eraseToAnyPublisher() // Simplify the type to AnyPublisher<[User], Never>
+            }
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
 
         let userInforPublisher = input.selectedTrigger
-            .flatMap { username in
-                self.useCases.fetchInforUser(userName: username).map { users in
-                    return users
-                }.replaceError(with: nil)
-            }.eraseToAnyPublisher()
+            .flatMap { [weak self] username -> AnyPublisher<UserInformation?, Never> in
+                guard let self = self else {
+                    return Just(nil).eraseToAnyPublisher() // Return nil for optional UserInformation if self is nil
+                }
+
+                return self.useCases.fetchInforUser(userName: username)
+                    .map { userInfo -> UserInformation? in
+                        userInfo // Map non-optional UserInformation to an optional
+                    }
+                    .replaceError(with: nil) // In case of error, return nil
+                    .eraseToAnyPublisher()
+            }
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
 
         // Load More Users Publisher
         let loadMoreUsersPublisher = input.loadMoreTrigger
@@ -61,7 +70,7 @@ final class UserViewModel: ObservableObject, ViewModelType {
                 self.pageNum += 1 // Increment the page number for loading more
                 return self.useCases.fetchUsers(pageNum: self.pageNum, limit: 20)
                     .map { users in
-                        return users
+                        users
                     }
                     .replaceError(with: [])
             }
@@ -82,19 +91,16 @@ final class UserViewModel: ObservableObject, ViewModelType {
             })
             .store(in: cancelBag) // Store subscription
 
-
         userInforPublisher
-            .receive(on: RunLoop.main) // Ensure this happens on the main thread
+            .receive(on: RunLoop.main)
             .assign(to: \.userInfor, on: output)
             .store(in: cancelBag)
 
         usersPublisher
-            .receive(on: RunLoop.main) // Ensure this happens on the main thread
+            .receive(on: RunLoop.main)
             .assign(to: \.users, on: output)
             .store(in: cancelBag)
+
         return output
-
     }
-
-
 }

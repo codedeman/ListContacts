@@ -30,6 +30,7 @@
 		0AC64B672C5D1F2B0034BE91 /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC64B632C5D1F2B0034BE91 /* UserListView.swift */; };
 		0AC64B682C5D1F2B0034BE91 /* UserRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC64B642C5D1F2B0034BE91 /* UserRowView.swift */; };
 		0AD1F0BE2CBA15BD0064DC62 /* CancelBag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD1F0BD2CBA15BD0064DC62 /* CancelBag.swift */; };
+		0AD1F0C22CBA63920064DC62 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD1F0C12CBA63920064DC62 /* ViewModelType.swift */; };
 		0AF0E06E2C63064100A38709 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF0E06D2C63064100A38709 /* Storage.swift */; };
 		0AF0E0712C630A0600A38709 /* MockUserPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF0E06F2C6309FB00A38709 /* MockUserPersistence.swift */; };
 /* End PBXBuildFile section */
@@ -78,6 +79,7 @@
 		0AC64B632C5D1F2B0034BE91 /* UserListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
 		0AC64B642C5D1F2B0034BE91 /* UserRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRowView.swift; sourceTree = "<group>"; };
 		0AD1F0BD2CBA15BD0064DC62 /* CancelBag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelBag.swift; sourceTree = "<group>"; };
+		0AD1F0C12CBA63920064DC62 /* ViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
 		0AF0E06D2C63064100A38709 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		0AF0E06F2C6309FB00A38709 /* MockUserPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserPersistence.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -164,6 +166,7 @@
 		0AC64B262C5D19400034BE91 /* ListContacts */ = {
 			isa = PBXGroup;
 			children = (
+				0AD1F0C02CBA63780064DC62 /* Common */,
 				0AF0E06C2C63061000A38709 /* Caching */,
 				0AC64B562C5D1D2F0034BE91 /* Features */,
 				0AC64B532C5D1BCA0034BE91 /* NetWork */,
@@ -218,6 +221,7 @@
 		0AC64B562C5D1D2F0034BE91 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				0AD1F0C32CBA63B00064DC62 /* Login */,
 				0AC64B572C5D1D3B0034BE91 /* UserList */,
 			);
 			path = Features;
@@ -259,6 +263,21 @@
 				0AC64B612C5D1F2B0034BE91 /* UserViewModel.swift */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		0AD1F0C02CBA63780064DC62 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				0AD1F0C12CBA63920064DC62 /* ViewModelType.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		0AD1F0C32CBA63B00064DC62 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 		0AF0E06C2C63061000A38709 /* Caching */ = {
@@ -410,6 +429,7 @@
 				0AC64B5F2C5D1EDF0034BE91 /* User.swift in Sources */,
 				0AC64B282C5D19400034BE91 /* ListContactsApp.swift in Sources */,
 				0AC64B682C5D1F2B0034BE91 /* UserRowView.swift in Sources */,
+				0AD1F0C22CBA63920064DC62 /* ViewModelType.swift in Sources */,
 				0AD1F0BE2CBA15BD0064DC62 /* CancelBag.swift in Sources */,
 				0AF0E0712C630A0600A38709 /* MockUserPersistence.swift in Sources */,
 				0AC64B5C2C5D1EA90034BE91 /* URLManager.swift in Sources */,
