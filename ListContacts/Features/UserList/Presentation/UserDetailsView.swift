@@ -109,6 +109,6 @@ let userInformation = UserInformationBuilder()
     .setNodeId("node123")
     .build()
 
-#Preview {
-    UserDetailsView(user: userInformation)
-}
+//#Preview {
+//    UserDetailsView(user: userInformation)
+//}
