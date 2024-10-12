@@ -11,6 +11,8 @@
 		0A05E21D2C5F652E003338FA /* DBNetWorkLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A05E21C2C5F652E003338FA /* DBNetWorkLayerTests.swift */; };
 		0A05E2232C5F6931003338FA /* MockUseCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A05E21E2C5F66D5003338FA /* MockUseCases.swift */; };
 		0A05E2262C5F697B003338FA /* UserViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A05E2252C5F697B003338FA /* UserViewModelTest.swift */; };
+		0A1846CA2CBAA78E00CF83D6 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1846C82CBAA78E00CF83D6 /* LoginViewModel.swift */; };
+		0A1846CB2CBAA78E00CF83D6 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1846C92CBAA78E00CF83D6 /* LoginView.swift */; };
 		0AB71B2B2C610AB6008ED45D /* UserInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB71B2A2C610AB6008ED45D /* UserInformation.swift */; };
 		0AB71B2D2C61C857008ED45D /* MockNetWork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB71B2C2C61C857008ED45D /* MockNetWork.swift */; };
 		0AB71B302C61CB4A008ED45D /* userresponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 0AB71B2F2C61CB4A008ED45D /* userresponse.json */; };
@@ -57,6 +59,8 @@
 		0A05E21C2C5F652E003338FA /* DBNetWorkLayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBNetWorkLayerTests.swift; sourceTree = "<group>"; };
 		0A05E21E2C5F66D5003338FA /* MockUseCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUseCases.swift; sourceTree = "<group>"; };
 		0A05E2252C5F697B003338FA /* UserViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModelTest.swift; sourceTree = "<group>"; };
+		0A1846C82CBAA78E00CF83D6 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		0A1846C92CBAA78E00CF83D6 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		0AB71B2A2C610AB6008ED45D /* UserInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInformation.swift; sourceTree = "<group>"; };
 		0AB71B2C2C61C857008ED45D /* MockNetWork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetWork.swift; sourceTree = "<group>"; };
 		0AB71B2F2C61CB4A008ED45D /* userresponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = userresponse.json; sourceTree = "<group>"; };
@@ -276,6 +280,8 @@
 		0AD1F0C32CBA63B00064DC62 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				0A1846C82CBAA78E00CF83D6 /* LoginViewModel.swift */,
+				0A1846C92CBAA78E00CF83D6 /* LoginView.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -429,6 +435,8 @@
 				0AC64B5F2C5D1EDF0034BE91 /* User.swift in Sources */,
 				0AC64B282C5D19400034BE91 /* ListContactsApp.swift in Sources */,
 				0AC64B682C5D1F2B0034BE91 /* UserRowView.swift in Sources */,
+				0A1846CA2CBAA78E00CF83D6 /* LoginViewModel.swift in Sources */,
+				0A1846CB2CBAA78E00CF83D6 /* LoginView.swift in Sources */,
 				0AD1F0C22CBA63920064DC62 /* ViewModelType.swift in Sources */,
 				0AD1F0BE2CBA15BD0064DC62 /* CancelBag.swift in Sources */,
 				0AF0E0712C630A0600A38709 /* MockUserPersistence.swift in Sources */,

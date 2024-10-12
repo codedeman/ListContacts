@@ -17,7 +17,8 @@ struct UserListView: View {
         let triggers = Triggers()
         let input = UserViewModel.Input(
             loadTrigger: triggers.load.eraseToAnyPublisher(),
-            selectedTrigger: triggers.selectedTrigger.eraseToAnyPublisher(), loadMoreTrigger: triggers.loadMoreTrigger.eraseToAnyPublisher()
+            selectedTrigger: triggers.selectedTrigger.eraseToAnyPublisher(),
+            loadMoreTrigger: triggers.loadMoreTrigger.eraseToAnyPublisher()
         )
         let cancelBag = CancelBag()
 
@@ -35,6 +36,7 @@ struct UserListView: View {
         NavigationStack {
             GeometryReader { geometry in
                 List {
+                    let _ = Self._printChanges()
                     ForEach(output.users, id: \.id) { user in
                         VStack(spacing: 0) {
                             UserRowView(
