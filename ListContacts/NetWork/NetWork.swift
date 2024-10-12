@@ -10,8 +10,11 @@ import Combine
 
 protocol NetWorkLayer: AnyObject {
     func request<T: Decodable>(_ urlRequest: URLRequest, for type: T.Type, decoder: JSONDecoder) -> AnyPublisher<T, Error>
+    func request<T: Decodable>(_ urlRequest: URLRequest, for type: T.Type, decoder: JSONDecoder) async throws -> T
+
 
 }
+
  extension NetWorkLayer {
 
     func request<T: Decodable>(
@@ -31,6 +34,18 @@ protocol NetWorkLayer: AnyObject {
 }
 
 final class DBNetWorkLayer: NetWorkLayer {
+    func request<T>(_ urlRequest: URLRequest, for type: T.Type, decoder: JSONDecoder) async throws -> T where T : Decodable {
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.badServerResponse)
+        }
+        
+        let decodedObject = try decoder.decode(T.self, from: data)
+        return decodedObject
+    }
+    
     init () { }
 
     func request<T>(

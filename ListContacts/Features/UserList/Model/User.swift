@@ -31,7 +31,7 @@ public struct User: Identifiable, Codable, Equatable {
     }
 }
 
-public class UserBuilder {
+public class UserBuilder : Codable {
     private var login: String = ""
     private var id: Int = 0
     private var avatarUrl: String = ""

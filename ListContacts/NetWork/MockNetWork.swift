@@ -9,6 +9,10 @@ import Foundation
 import Combine
 
 final class MockNetWorkLayer: NetWorkLayer {
+    func request<T>(_ urlRequest: URLRequest, for type: T.Type, decoder: JSONDecoder) async throws -> T where T : Decodable {
+        return UserBuilder().build().id as! T
+    }
+    
 
     private var mockFileName: String
 

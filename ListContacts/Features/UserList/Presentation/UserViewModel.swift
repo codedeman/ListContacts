@@ -7,82 +7,94 @@ struct IdentifiableError: Identifiable {
     var message: String
 }
 
-final class UserViewModel: ObservableObject {
+protocol ViewModelType {
+    associatedtype Input
+    associatedtype Output
+    func transform(input: Input, cancelBag: CancelBag) -> Output
+}
+
+final class UserViewModel: ObservableObject, ViewModelType {
+   
     @Published var users: [User] = []
-    private var cancellables = Set<AnyCancellable>()
     @Published var pageNum: Int = 1
     private var useCases: UseCases
     @Published var error: IdentifiableError?
     @Published var isFetching = false
-    @Published var userInfor: UserInformation?
 
     init(useCases: UseCases) {
         self.useCases = useCases
         self.users = useCases.loadCachedUsers()
-        fetchUsers(pageNum: pageNum)
     }
 
-    func fetchUsers(pageNum: Int) {
-        guard !isFetching else {
-            print("Fetch already in progress")
-            return
-        } // Avoid making multiple requests at the same time
-        isFetching = true
-        print("Fetching users for page: \(pageNum)")
+    struct Input {
+        let loadTrigger: AnyPublisher<Void, Never>
+        let selectedTrigger: AnyPublisher<String, Never>
+        let loadMoreTrigger: AnyPublisher<Void, Never> // Add load more trigger
 
-        useCases.fetchUsers(pageNum: pageNum, limit: 20)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                self?.isFetching = false
+    }
+    
+    final class Output: ObservableObject {
+        @Published var users: [User] = []
+        @Published var userInfor: UserInformation?
+    }
+    func transform(input: Input, cancelBag: CancelBag) -> Output {
+        let output = Output()
+        let usersPublisher = input.loadTrigger
+            .flatMap {  _ in
+                self.useCases.fetchUsers(pageNum: self.pageNum, limit: 20)
+                    .map { users in
+                        return users
+                    }
+                    .replaceError(with: []) // Handle error by returning an empty array
+            }.eraseToAnyPublisher()
+
+        let userInforPublisher = input.selectedTrigger
+            .flatMap { username in
+                self.useCases.fetchInforUser(userName: username).map { users in
+                    return users
+                }.replaceError(with: nil)
+            }.eraseToAnyPublisher()
+
+        // Load More Users Publisher
+        let loadMoreUsersPublisher = input.loadMoreTrigger
+            .flatMap { _ in
+                self.pageNum += 1 // Increment the page number for loading more
+                return self.useCases.fetchUsers(pageNum: self.pageNum, limit: 20)
+                    .map { users in
+                        return users
+                    }
+                    .replaceError(with: [])
+            }
+            .eraseToAnyPublisher()
+
+        loadMoreUsersPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
-                    break
+                    print("Load more completed successfully.")
                 case .failure(let error):
-                    self?.error = IdentifiableError(message: error.localizedDescription)
-                    print("Error fetching users: \(error.localizedDescription)")
+                    print("Error loading more users: \(error)") // Handle error appropriately
                 }
-            }, receiveValue: { [weak self] newUsers in
-                guard let self = self else { return }
-                let currentUserIds = Set(self.users.map { $0.id }) // / Getting the IDs of current users
-                let filteredNewUsers = newUsers.filter { !currentUserIds.contains($0.id) } // Filtering new users
-                self.users.append(contentsOf: filteredNewUsers)
-                print("Fetched \(filteredNewUsers.count) new users") // Appending new users to the users array
-                self.useCases.cacheUsers(users) // Caching the updated users array
+            }, receiveValue: { users in
+                // Append all new users at once
+                output.users.append(contentsOf: users)
             })
-            .store(in: &cancellables)
+            .store(in: cancelBag) // Store subscription
+
+
+        userInforPublisher
+            .receive(on: RunLoop.main) // Ensure this happens on the main thread
+            .assign(to: \.userInfor, on: output)
+            .store(in: cancelBag)
+
+        usersPublisher
+            .receive(on: RunLoop.main) // Ensure this happens on the main thread
+            .assign(to: \.users, on: output)
+            .store(in: cancelBag)
+        return output
+
     }
 
-    // Function to load more users if needed based on the current user's position
-    func loadMoreUsersIfNeeded(currentUser user: User?) {
-        guard let user = user else {
-            fetchUsers(pageNum: pageNum) // Fetching users if currentUser is nil
-            return
-        }
 
-        let thresholdIndex = users.index(users.endIndex, offsetBy: -5) // Setting the threshold index
-        if let userIndex = users.firstIndex(where: { $0.id == user.id }), userIndex >= thresholdIndex {
-            print("Current user index \(userIndex), threshold index \(thresholdIndex). Loading more users.")
-            pageNum += 1 // Incrementing the page number
-            fetchUsers(pageNum: pageNum)
-        } else {
-            print("Current user index \(users.firstIndex(where: { $0.id == user.id }) ?? -1), threshold index \(thresholdIndex). No need to load more users.", pageNum)
-        }
-    }
-
-    // Function to fetch information for a specific user by username
-    func fetchUserInformation(userName: String) {
-        useCases.fetchInforUser(userName: userName)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    self.error = IdentifiableError(message: error.localizedDescription)
-                    print("Error fetching user info: \(error.localizedDescription)")
-                }
-            } receiveValue: { [weak self] userInfor in
-                self?.userInfor = userInfor
-            }.store(in: &cancellables)
-    }
 }
