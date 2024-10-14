@@ -17,98 +17,86 @@ final class UserViewModelTest: XCTestCase {
     private var useCases: MockUseCases!
     private var mockPersistence: MockUserPersistence!
 
+    var loadTrigger: PassthroughSubject<Void, Never>!
+    var selectedTrigger: PassthroughSubject<String, Never>!
+    var loadMoreTrigger: PassthroughSubject<Void, Never>!
+    var cancelBag: CancelBag!
+
+
     override func setUpWithError() throws {
         try super.setUpWithError()
         mockPersistence = MockUserPersistence()
         useCases = MockUseCases(storage: mockPersistence)
         sut = UserViewModel(useCases: useCases)
-        cancellables = []
+        cancelBag = CancelBag()
+
+        loadTrigger = PassthroughSubject<Void, Never>()
+        selectedTrigger = PassthroughSubject<String, Never>()
+        loadMoreTrigger = PassthroughSubject<Void, Never>()
     }
 
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
+    override func tearDown() {
+        cancelBag = nil
         sut = nil
-        useCases = nil
+        loadTrigger = nil
+        selectedTrigger = nil
+        loadMoreTrigger = nil
+        super.tearDown()
     }
-
     func testFetchUsers() {
         // Given
         let expectation = self.expectation(description: "Fetch users")
 
-        // When
-        sut.fetchUsers(pageNum: 0)
+        let input = UserViewModel.Input(
+            loadTrigger: loadTrigger.eraseToAnyPublisher(),
+            selectedTrigger: selectedTrigger.eraseToAnyPublisher(),
+            loadMoreTrigger: loadMoreTrigger.eraseToAnyPublisher()
+        )
 
-        // Then
-        var subscription: AnyCancellable? = nil
+        let output = sut.transform(
+            input: input,
+            cancelBag: cancelBag
+        )
 
-        subscription =  sut.$users
-            .dropFirst()
-            .receive(on: DispatchQueue.main)
-            .sink { users in
-                XCTAssertEqual(users.count, 20)
-                XCTAssertEqual(users.first?.login, "user20")
-                expectation.fulfill()
-                subscription?.cancel()
-            }
+        loadTrigger.send(())
 
-        waitForExpectations(timeout: 5, handler: nil)
+        // Assert
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            XCTAssertEqual(output.users.count, 20, "The users should be loaded successfully")
+            XCTAssertEqual(output.users.first?.login, "user20", "The users should be loaded successfully")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1.0)
+
     }
 
     func testLoadMoreUsersIfNeeded() {
-           // Create an expectation
-           let expectation = XCTestExpectation(description: "Load more users")
+        // Create an expectation
+        let expectation = XCTestExpectation(description: "Load more users")
 
-           // Add initial users to the view model
-        let initialUsers = (0..<15).map {
-            User(
-                login: "user\($0)",
-                id: $0,
-                avatarUrl: "",
-                htmlUrl: "",
-                followersUrl: "",
-                followingUrl: "",
-                reposUrl: "",
-                type: "User",
-                siteAdmin: false
-            )
-        }
-           sut.users = initialUsers
+        let input = UserViewModel.Input(
+            loadTrigger: loadTrigger.eraseToAnyPublisher(),
+            selectedTrigger: selectedTrigger.eraseToAnyPublisher(),
+            loadMoreTrigger: loadMoreTrigger.eraseToAnyPublisher()
+        )
 
-           // Set up the mock use case to return new users
-        let newUsers = (15..<35).map {
-            User(
-                login: "user\($0)",
-                id: $0,
-                avatarUrl: "",
-                htmlUrl: "",
-                followersUrl: "",
-                followingUrl: "",
-                reposUrl: "",
-                type: "User",
-                siteAdmin: false
-            )
+        let output = sut.transform(input: input, cancelBag: cancelBag)
+        // Act: Load initial users
+        loadTrigger.send(())
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            // Load more users
+            //                   self.mockUseCases.fetchUsersResult = .success(moreUsers)
+            self.loadMoreTrigger.send(())
         }
 
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            XCTAssertEqual(output.users.count, 40 , "All users should be loaded successfully")
+            expectation.fulfill()
+        }
 
-           // Bind to the users property
-           sut.$users
-               .dropFirst() // Skip the initial state
-               .sink { users in
-                   if users.count == 35 {
-                       XCTAssertEqual(users[20].login, "user20")
-                       XCTAssertEqual(users.last?.login, "user34")
-                       expectation.fulfill()
-                   }
-               }
-               .store(in: &cancellables)
-            sut.users.append(contentsOf: newUsers)
+        wait(for: [expectation], timeout: 2.0)
 
-           // Call the method with a user that should trigger loading more users
-            sut.loadMoreUsersIfNeeded(currentUser: initialUsers[10])
-
-           // Wait for the expectation
-            wait(for: [expectation], timeout: 5.0)
        }
-
 
 }
