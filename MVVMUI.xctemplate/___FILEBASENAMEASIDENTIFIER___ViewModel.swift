@@ -1,13 +1,8 @@
-// 
-//  LoginViewModel.swift
-//  ListContacts
-//
-//  Created by Kevin on 10/16/24.
-//
+// ___FILEHEADER___
 
 import Combine
 
-final class LoginViewModel: ObservableObject, ViewModelType {
+final class ___FILEBASENAMEASIDENTIFIER___: ObservableObject, ViewModelType {
 
     @Published var data: [String] = [] // Replace with your data model
     @Published var error: Error?
